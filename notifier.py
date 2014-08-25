@@ -6,7 +6,7 @@ import objc
 import sys
 
 
-def notify(title, text, subtitle=False, delay=0, sound=False, userInfo={}):
+def notify(title, text, subtitle=False, delay=0, sound=False):
     """
     Notifies through OSX Notification Center.
     From: http://stackoverflow.com/questions/17651017/python-post-osx-notification
@@ -18,17 +18,28 @@ def notify(title, text, subtitle=False, delay=0, sound=False, userInfo={}):
     if subtitle:
         notification.setSubtitle_(subtitle)
     notification.setInformativeText_(text)
-    notification.setUserInfo_(userInfo)
     if sound:
         notification.setSoundName_("NSUserNotificationDefaultSoundName")
     notification.setDeliveryDate_(Foundation.NSDate.dateWithTimeInterval_sinceDate_(delay, Foundation.NSDate.date()))
     NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
 
+def bold(msg):
+    return u'\033[1m%s\033[0m' % msg
+
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
-        notify(title=sys.argv[1], text=sys.argv[2], sound=True)
+    if len(sys.argv) >= 3:
+        if '-s' in sys.argv:
+            sound = True
+            sys.argv.remove('-s')
+        else: sound = False
+        title = sys.argv[1]
+        text = ' '.join(sys.argv[2:])
+        notify(title=title, text=text, sound=sound)
     else:
         usage = ('Notifies through OS X Notification Center with given title and text.\n\n' +
-                 'Usage: \n{} title text \n'.format(sys.argv[0]))
+                 bold('Usage: ') + '\n{} [-s] title text \n\n'.format(sys.argv[0]) + 
+                 '    ' + bold('-s') + ' will enable a sound notification.\n\n' +
+                 bold('Example:') + '\n{} -s "Title with four words" Message doesnt need to be encapsulated'
+                    .format(sys.argv[0]))
         print(usage)
