@@ -12,7 +12,7 @@ Send notifications to OS X Notification Center with python or shell.
 
 **Example:**
 ```
-./notifier.py -s "Title with four words" Message doesnt need to be encapsulated./notifier.py 'Notification iiik' 'Message about broken...'
+./notifier.py -s "Title with four words" Message doesnt need to be encapsulated.
 ```
 
 
